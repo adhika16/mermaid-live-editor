@@ -1,0 +1,13 @@
+{
+	"servers": {
+		"appwrite-docs": {
+			"url": "https://mcp-for-docs.appwrite.io",
+			"type": "http"
+		},
+		"daisyUI": {
+     "type": "sse",
+     "url": "https://gitmcp.io/saadeghi/daisyui"
+		}
+	},
+	"inputs": []
+}
