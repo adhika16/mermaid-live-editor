@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "animejs": "^4.2.2",
     "appwrite": "^21.2.1",
     "daisyui": "^5.3.3",
     "mermaid": "^11.12.0",
