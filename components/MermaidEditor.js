@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import mermaid from "mermaid";
 import Editor from "@monaco-editor/react";
+import { useSettings } from "@/lib/useSettings";
 
 const MermaidEditor = ({ 
   code, 
@@ -16,6 +17,7 @@ const MermaidEditor = ({
 }) => {
   const [mermaidSvg, setMermaidSvg] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const { settings } = useSettings();
 
   // Mermaid templates
   const templates = {
@@ -128,6 +130,55 @@ flowchart LR
     }
   };
 
+  const handleManualRender = () => {
+    // Trigger render by calling the same logic as the useEffect
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: "default",
+      securityLevel: "loose",
+    });
+
+    const renderMermaid = async () => {
+      try {
+        setMermaidSvg("");
+        setErrorMessage("");
+
+        const trimmedCode = code.trim();
+        if (!trimmedCode) {
+          setErrorMessage("Please enter some Mermaid code");
+          return;
+        }
+
+        const uniqueId = `mermaid-manual-${Date.now()}`;
+
+        const parseResult = await mermaid.parse(trimmedCode);
+        if (!parseResult) {
+          setErrorMessage("Invalid Mermaid syntax");
+          return;
+        }
+
+        const { svg } = await mermaid.render(uniqueId, trimmedCode);
+        setMermaidSvg(svg);
+        setErrorMessage("");
+
+        if (onMermaidRender) {
+          onMermaidRender({ svg, error: null });
+        }
+      } catch (error) {
+        console.error("Mermaid rendering error:", error);
+        setMermaidSvg("");
+        const errorMsg = error.message || "Error rendering diagram";
+        setErrorMessage(errorMsg);
+
+        if (onMermaidRender) {
+          onMermaidRender({ svg: "", error: errorMsg });
+        }
+      }
+    };
+
+    renderMermaid();
+  };
+
   const handleEditorDidMount = (editor, monaco) => {
     monaco.editor.defineTheme("daisyui-dark", {
       base: "vs-dark",
@@ -160,6 +211,11 @@ flowchart LR
 
   // Render Mermaid when code changes
   useEffect(() => {
+    // Skip rendering if auto-render is disabled
+    if (!settings.autoRender) {
+      return;
+    }
+
     mermaid.initialize({
       startOnLoad: false,
       theme: "default",
@@ -207,15 +263,15 @@ flowchart LR
 
     const timeoutId = setTimeout(() => {
       renderMermaid();
-    }, 300);
+    }, settings.renderDelay);
 
     return () => clearTimeout(timeoutId);
-  }, [code, onMermaidRender]);
+  }, [code, onMermaidRender, settings.autoRender, settings.renderDelay]);
 
   return (
     <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col bg-base-200">
       {/* Header */}
-      <div className="p-3 border-b border-base-300 flex gap-3 items-center justify-between">
+      <div className="p-4 border-b border-base-300 flex gap-3 items-center justify-between border-r-base-content border-r">
         <div className="flex gap-3 items-center flex-1">
           {headerContent}
           
@@ -237,38 +293,65 @@ flowchart LR
           )}
         </div>
 
-        {showSaveButton && onSave && (
-          <button
-            onClick={onSave}
-            className="btn btn-sm btn-success"
-            disabled={isSaving}
-          >
-            {isSaving ? (
-              <>
-                <span className="loading loading-spinner loading-sm"></span>
-                Saving...
-              </>
-            ) : (
-              <>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
-                  />
-                </svg>
-                {saveButtonText}
-              </>
-            )}
-          </button>
-        )}
+        <div className="flex gap-2">
+          {/* Manual render button when auto-render is disabled */}
+          {!settings.autoRender && (
+            <button
+              onClick={handleManualRender}
+              className="btn btn-sm btn-info"
+              title="Manually render the diagram"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              Render
+            </button>
+          )}
+
+          {showSaveButton && onSave && (
+            <button
+              onClick={onSave}
+              className="btn btn-sm btn-success"
+              disabled={isSaving}
+            >
+              {isSaving ? (
+                <>
+                  <span className="loading loading-spinner loading-sm"></span>
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"
+                    />
+                  </svg>
+                  {saveButtonText}
+                </>
+              )}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Editor */}
