@@ -13,7 +13,7 @@
     "appwrite": "^21.2.1",
     "daisyui": "^5.3.3",
     "mermaid": "^11.12.0",
-    "monaco-editor": "^0.54.0",
+    "monaco-editor": "^0.53.0",
     "next": "15.5.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
