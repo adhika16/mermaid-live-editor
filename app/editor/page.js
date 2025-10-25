@@ -1,7 +1,7 @@
 "use client";
 import { useAuth } from "@/lib/useAuth";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { saveWorkspace } from "@/lib/appwrite-workspace";
 import SaveWorkspaceModal from "@/components/SaveWorkspaceModal";
 import MermaidEditor from "@/components/MermaidEditor";
@@ -49,6 +49,13 @@ const EditorPage = () => {
     }
   };
 
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -58,8 +65,11 @@ const EditorPage = () => {
   }
 
   if (!user) {
-    router.push("/login");
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <span className="loading loading-lg"></span>
+      </div>
+    );
   }
 
   return (

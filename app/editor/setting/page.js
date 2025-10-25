@@ -1,11 +1,28 @@
 "use client";
 
 import { useSettings } from "@/lib/useSettings";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/useAuth";
 
 const SettingPage = () => {
   const { settings, updateSetting, resetSettings, isLoading } = useSettings();
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
   const [saveSuccess, setSaveSuccess] = useState(false);
+
+  useEffect(() => {
+    if (loading) return;
+
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    setUserData(user);
+    
+  }, [user, loading, router]);
 
   const handleThemeChange = (newTheme) => {
     updateSetting("theme", newTheme);

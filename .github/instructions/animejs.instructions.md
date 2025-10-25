@@ -1,6 +1,5 @@
 ---
 description: Anime.js v4 guide for LLMs and code editors
-applyTo: "**"
 ---
 
 # Anime.js v4

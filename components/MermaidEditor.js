@@ -271,7 +271,7 @@ flowchart LR
   return (
     <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col bg-base-200">
       {/* Header */}
-      <div className="p-4 border-b border-base-300 flex gap-3 items-center justify-between border-r-base-content border-r">
+      <div className="p-4 border-b border-base-300 flex gap-3 items-center justify-between border-r-base-300 border-r">
         <div className="flex gap-3 items-center flex-1">
           {headerContent}
           

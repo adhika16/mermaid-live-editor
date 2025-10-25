@@ -15,6 +15,7 @@
     "mermaid": "^11.12.0",
     "monaco-editor": "^0.53.0",
     "next": "15.5.5",
+    "node-appwrite": "^20.2.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-zoom-pan-pinch": "^3.7.0"
