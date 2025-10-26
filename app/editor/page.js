@@ -31,7 +31,7 @@ const EditorPage = () => {
       setIsSaving(true);
       setSaveSuccess("");
 
-      await saveWorkspace(user.$id, {
+      const workspace = await saveWorkspace(user.$id, {
         ...workspaceData,
         mermaidCode: code,
       });
@@ -39,8 +39,11 @@ const EditorPage = () => {
       setSaveSuccess("Workspace saved successfully!");
       setIsSaveModalOpen(false);
 
-      // Clear success message after 3 seconds
-      setTimeout(() => setSaveSuccess(""), 3000);
+      // Clear success message after 3 seconds and navigate
+      setTimeout(() => {
+        setSaveSuccess("");
+        router.push(`/editor/${workspace.$id}`);
+      }, 3000);
     } catch (error) {
       console.error("Error saving workspace:", error);
       throw new Error(error.message || "Failed to save workspace");

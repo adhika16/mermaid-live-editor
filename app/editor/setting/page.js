@@ -19,8 +19,6 @@ const SettingPage = () => {
       router.push("/login");
       return;
     }
-
-    setUserData(user);
     
   }, [user, loading, router]);
 

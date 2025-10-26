@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { account } from "@/lib/appwrite-workspace";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/useAuth";
 import { signUpWithGithub, signUpWithGoogle } from "@/lib/server/oauth";
@@ -14,30 +13,6 @@ const LoginPage = () => {
   if (user) {
     router.push("/editor");
   }
-
-  const loginWithOAuth = async (provider) => {
-    setLoading(true);
-    setError("");
-    try {
-      // Request scopes needed for account access
-      const scopes = [
-        "https://www.googleapis.com/auth/userinfo.email",
-        "https://www.googleapis.com/auth/userinfo.profile",
-        "openid"
-      ];
-
-      await account.createOAuth2Session(
-        provider,
-        `${window.location.origin}/auth/callback`,
-        `${window.location.origin}/login`,
-        scopes
-      );
-    } catch (error) {
-      console.error(`${provider} OAuth failed:`, error);
-      setError(`${provider} login failed: ${error.message}`);
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200">
