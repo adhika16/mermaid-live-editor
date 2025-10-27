@@ -88,29 +88,27 @@ export default function WorkspaceCard({
         {/* Expanded Actions */}
         {showActions && (
           <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-base-300">
-            {workspace.isPublic && (
-              <button
-                onClick={() => onShare(workspace)}
-                className="btn btn-xs btn-outline"
-                disabled={isLoading}
+            <button
+              onClick={() => onShare(workspace)}
+              className="btn btn-xs btn-outline"
+              disabled={isLoading}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8.684 13.342C9.589 12.804 10 11.8 10 10.5a3.5 3.5 0 11-7 0c0 1.295.411 2.297 1.316 2.837m4.368 5.005H9m6 0h.01M9 21h6a2 2 0 002-2V9a2 2 0 00-2-2H9a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-                Share
-              </button>
-            )}
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8.684 13.342C9.589 12.804 10 11.8 10 10.5a3.5 3.5 0 11-7 0c0 1.295.411 2.297 1.316 2.837m4.368 5.005H9m6 0h.01M9 21h6a2 2 0 002-2V9a2 2 0 00-2-2H9a2 2 0 00-2 2v10a2 2 0 002 2z"
+                />
+              </svg>
+              Share
+            </button>
 
             <button
               onClick={() => onDuplicate(workspace.$id)}

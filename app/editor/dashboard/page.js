@@ -7,6 +7,7 @@ import {
   getUserWorkspaces,
   deleteWorkspace,
   duplicateWorkspace,
+  saveWorkspace,
 } from "@/lib/appwrite-workspace";
 import Link from "next/link";
 
@@ -73,8 +74,34 @@ export default function DashboardPage() {
     }
   };
 
-  const handleShare = (workspace) => {
-    setShareModal(workspace);
+  const handleShare = async (workspace) => {
+    if (!workspace.isPublic) {
+      if (
+        !confirm(
+          "This workspace is private. To share it, you need to make it public. Continue?"
+        )
+      ) {
+        return;
+      }
+      try {
+        setIsLoading(true);
+        const updatedData = { ...workspace, isPublic: true };
+        const updatedWorkspace = await saveWorkspace(user.$id, updatedData);
+        setWorkspaces(
+          workspaces.map((w) =>
+            w.$id === workspace.$id ? updatedWorkspace : w
+          )
+        );
+        setShareModal(updatedWorkspace);
+      } catch (err) {
+        console.error("Error making workspace public:", err);
+        setError("Failed to make workspace public.");
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      setShareModal(workspace);
+    }
   };
 
   const copyShareLink = () => {
@@ -343,8 +370,9 @@ export default function DashboardPage() {
 
                 <div>
                   <p className="text-sm text-gray-500">
-                    ✅ This workspace is public and can be shared with anyone.
-                    They can view it without signing in.
+                    {shareModal.isPublic
+                      ? "✅ This workspace is public and can be shared with anyone. They can view it without signing in."
+                      : "🔒 This workspace is private. Make it public to share."}
                   </p>
                 </div>
               </div>

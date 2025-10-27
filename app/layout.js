@@ -21,6 +21,14 @@ const bogle = localFont({
   display: "swap",
 });
 
+const jersey = localFont({
+  src: "../public/fonts/Jersey15-Regular.ttf",
+  variable: "--font-jersey",
+  weight: "400",
+  style: "normal",
+  display: "swap",
+});
+
 export const metadata = {
   title: "Mermaid Live Editor - Create Beautiful Diagrams",
   description: "Create stunning visual diagrams with Mermaid. Real-time collaboration, beautiful designs, and instant rendering.",
@@ -30,7 +38,7 @@ export default function RootLayout({ children }) {
   return (
     <html data-theme="silk" lang="en">
       <body
-        className={`${bogle.className} antialiased`}
+        className={`${jersey.className} antialiased`}
       >
         <ThemeProvider>
           {children}
