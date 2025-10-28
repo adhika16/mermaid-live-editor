@@ -5,10 +5,14 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",
+    "@opennextjs/cloudflare": "^1.11.0",
     "animejs": "^4.2.2",
     "appwrite": "18.0.0",
     "daisyui": "^5.3.3",
@@ -22,6 +26,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.14",
-    "tailwindcss": "^4.1.14"
+    "tailwindcss": "^4.1.14",
+    "wrangler": "^4.45.0"
   }
 }
